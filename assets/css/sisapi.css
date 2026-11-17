@@ -1,0 +1,20 @@
+:root{--g900:#14532d;--g700:#15803d;--g500:#22c55e;--g100:#dcfce7;--bg:#f4f7f4}
+body{background:var(--bg);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.navbar-sisapi{background:var(--g900)}
+.navbar-sisapi .nav-link{color:#e8f5e9}.navbar-sisapi .nav-link:hover,.navbar-sisapi .nav-link.active{color:#fff}
+.btn-sisapi{background:var(--g700);border-color:var(--g700);color:#fff}.btn-sisapi:hover{background:var(--g900);color:#fff}
+.btn-wa{background:#25d366;color:#fff;font-weight:600}.btn-wa:hover{background:#1ebe5a;color:#fff}
+.hero{background:linear-gradient(135deg,var(--g900),var(--g700));color:#fff;border-radius:0 0 28px 28px;padding:48px 0 56px}
+.card-produk{border:0;border-radius:16px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07);transition:.15s;height:100%}
+.card-produk:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(0,0,0,.12)}
+.card-produk img{aspect-ratio:4/3;object-fit:cover;width:100%}
+.harga{color:var(--g700);font-weight:700}
+.kat-pill{display:block;background:#fff;border-radius:16px;padding:18px;text-align:center;color:var(--g900);text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.06);font-weight:600}
+.kat-pill:hover{background:var(--g100)}
+.stat-box{background:#fff;border-radius:16px;padding:18px;text-align:center}
+.stat-box b{font-size:1.8rem;color:var(--g700)}
+.footer-sisapi{background:var(--g900);color:#cfe8d5}
+.gal-main{aspect-ratio:4/3;object-fit:cover;width:100%;border-radius:16px}
+.gal-thumb{width:72px;height:72px;object-fit:cover;border-radius:10px;cursor:pointer;border:2px solid transparent}
+.gal-thumb:hover{border-color:var(--g500)}
+.badge-verif{background:var(--g100);color:var(--g900)}

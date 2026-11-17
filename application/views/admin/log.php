@@ -1,0 +1,2 @@
+<div class="card"><div class="card-body table-responsive"><table class="table table-sm table-striped dt"><thead><tr><th>Waktu</th><th>Pengguna</th><th>Aksi</th><th>Keterangan</th><th>IP</th></tr></thead><tbody>
+<?php foreach($list as $l): ?><tr><td><?= tgl($l->created_at) ?></td><td><?= e($l->nama?:'-') ?></td><td><?= e($l->aksi) ?></td><td><?= e($l->keterangan) ?></td><td><?= e($l->ip) ?></td></tr><?php endforeach; ?></tbody></table></div></div>

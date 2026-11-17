@@ -1,0 +1,24 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
+$route['default_controller'] = 'home';
+$route['404_override'] = '';
+$route['translate_uri_dashes'] = FALSE;
+
+$route['login'] = 'auth/login';
+$route['logout'] = 'auth/logout';
+$route['ternak'] = 'katalog/kategori/ternak';
+$route['hasil-peternakan'] = 'katalog/kategori/hasil-peternakan';
+$route['pakan-ternak'] = 'katalog/kategori/pakan-ternak';
+$route['produk'] = 'katalog/index';
+$route['produk/(:num)'] = 'katalog/detail/$1';
+$route['daftar-peternak'] = 'katalog/peternak';
+$route['profil-peternak/(:num)'] = 'katalog/profil_peternak/$1';
+$route['admin'] = 'admin/dashboard';
+$route['admin/master/(kategori|subkategori|kecamatan|desa)'] = 'admin/master/index/$1';
+$route['peternak'] = 'peternak/dashboard';
+$route['kecamatan/(:num)'] = 'katalog/kecamatan/$1';
+$route['desa/(:num)'] = 'katalog/desa/$1';
+$route['tentang'] = 'home/tentang';
+$route['akun/password'] = 'akun/password';
+$route['wa/(:num)'] = 'wa/go/$1';
+$route['api/desa/(:num)'] = 'katalog/api_desa/$1';
+$route['api/subkategori/(:num)'] = 'katalog/api_sub/$1';
