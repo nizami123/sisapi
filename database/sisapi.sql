@@ -42,6 +42,7 @@ CREATE TABLE peternak (
  dokumen VARCHAR(255) NULL,
  status_verifikasi ENUM('belum','menunggu','terverifikasi','ditolak','dinonaktifkan') NOT NULL DEFAULT 'belum',
  catatan_verifikasi TEXT NULL,
+ sumber ENUM('admin','mandiri') NOT NULL DEFAULT 'admin',
  created_at DATETIME NOT NULL, updated_at DATETIME NULL, deleted_at DATETIME NULL,
  INDEX(status_verifikasi), INDEX(kecamatan_id), INDEX(desa_id),
  FOREIGN KEY (user_id) REFERENCES users(id),

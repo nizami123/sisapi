@@ -5,6 +5,7 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['login'] = 'auth/login';
 $route['logout'] = 'auth/logout';
+$route['daftar'] = 'daftar/index';
 $route['ternak'] = 'katalog/kategori/ternak';
 $route['hasil-peternakan'] = 'katalog/kategori/hasil-peternakan';
 $route['pakan-ternak'] = 'katalog/kategori/pakan-ternak';

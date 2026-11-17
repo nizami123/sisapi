@@ -10,8 +10,18 @@ class Auth extends CI_Controller {
                 redirect('login');
             }
             $email=trim($this->input->post('email',TRUE)); $pw=(string)$this->input->post('password');
-            $u=$this->db->get_where('users',array('email'=>$email,'is_active'=>1,'deleted_at'=>NULL))->row();
+            $u=$this->db->get_where('users',array('email'=>$email,'deleted_at'=>NULL))->row();
             if($u && password_verify($pw,$u->password)){
+                if(!$u->is_active){
+                    // Password benar tapi akun belum aktif: jelaskan alasannya (aman, karena password sudah cocok)
+                    $pt=$this->db->get_where('peternak',array('user_id'=>$u->id,'deleted_at'=>NULL))->row();
+                    if($pt && $pt->status_verifikasi==='menunggu') $msg='Pendaftaran Anda sedang menunggu persetujuan admin Dinas. Silakan coba masuk lagi setelah disetujui.';
+                    elseif($pt && $pt->status_verifikasi==='ditolak') $msg='Pendaftaran Anda ditolak.'.($pt->catatan_verifikasi?' Alasan: '.$pt->catatan_verifikasi:'').' Hubungi Dinas untuk informasi lebih lanjut.';
+                    else $msg='Akun Anda tidak aktif. Hubungi admin Dinas.';
+                    $this->Log_model->add('login_ditolak',$email);
+                    $this->session->set_flashdata('danger',$msg);
+                    redirect('login');
+                }
                 $this->session->sess_regenerate(TRUE);
                 $this->session->set_userdata(array('uid'=>$u->id,'nama'=>$u->nama,'role'=>$u->role,'tries'=>0));
                 $this->db->where('id',$u->id)->update('users',array('last_login'=>date('Y-m-d H:i:s')));

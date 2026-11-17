@@ -20,7 +20,8 @@ Paket ini berisi kode aplikasi (application/, assets/, database/). Core framewor
 (dan ganti email admin lewat tambah admin baru lalu nonaktifkan akun seed).
 
 ## Alur
-- Admin: buat akun peternak (Data Peternak > Tambah) -> peternak login, lengkapi profil, "Ajukan Verifikasi" -> admin menyetujui (label Terverifikasi).
+- Peternak daftar mandiri lewat `/daftar` -> akun nonaktif, status Menunggu -> admin menyetujui di menu Verifikasi Peternak -> akun aktif dan bisa login. (Untuk database lama jalankan `database/migrasi_daftar_mandiri.sql`.)
+- Admin: atau buat akun peternak (Data Peternak > Tambah) -> peternak login, lengkapi profil, "Ajukan Verifikasi" -> admin menyetujui (label Terverifikasi).
 - Peternak: Tambah Produk (draft atau ajukan) -> admin Verifikasi Produk -> tayang di katalog.
 - Produk tayang publik hanya jika: peternak Terverifikasi + produk Disetujui + ketersediaan Tersedia/Habis.
 - Perubahan penting pada produk yang sudah disetujui disimpan di `produk_revisi` dan menunggu persetujuan ulang; stok dan ketersediaan langsung berlaku.

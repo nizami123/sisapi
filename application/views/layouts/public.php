@@ -20,6 +20,7 @@
     <li class="nav-item"><a class="nav-link" href="<?= site_url('daftar-peternak') ?>">Peternak</a></li>
     <li class="nav-item"><a class="nav-link" href="<?= site_url('tentang') ?>">Tentang SISAPI</a></li>
    </ul>
+   <a class="btn btn-light btn-sm me-2" href="<?= site_url('daftar') ?>"><i class="fa fa-user-plus"></i> Daftar Peternak</a>
    <a class="btn btn-outline-light btn-sm" href="<?= site_url('login') ?>"><i class="fa fa-user"></i> Masuk Peternak/Admin</a>
   </div>
  </div>

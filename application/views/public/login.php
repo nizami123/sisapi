@@ -7,4 +7,5 @@
 <div class="mb-3"><label class="form-label">Email</label><input type="email" name="email" class="form-control" required autofocus></div>
 <div class="mb-3"><label class="form-label">Password</label><input type="password" name="password" class="form-control" required></div>
 <button class="btn btn-sisapi w-100">Masuk</button><?= form_close() ?>
-<a href="<?= site_url() ?>" class="d-block text-center mt-3 small">&laquo; Kembali ke beranda</a></div></div></body></html>
+<div class="text-center mt-3 small">Belum punya akun? <a href="<?= site_url('daftar') ?>">Daftar sebagai peternak</a></div>
+<a href="<?= site_url() ?>" class="d-block text-center mt-2 small">&laquo; Kembali ke beranda</a></div></div></body></html>

@@ -1,6 +1,6 @@
 <div class="row"><div class="col-lg-7"><div class="card"><div class="card-body">
 <h5><?= e($pt->nama) ?> <?= badge_verif($pt->status_verifikasi) ?></h5>
-<table class="table table-sm"><tr><th>Email</th><td><?= e($pt->email) ?></td></tr><tr><th>Kelompok</th><td><?= e($pt->nama_kelompok) ?></td></tr><tr><th>WhatsApp</th><td><?= e($pt->whatsapp) ?></td></tr><tr><th>Jenis usaha</th><td><?= e($pt->jenis_usaha) ?></td></tr>
+<table class="table table-sm"><tr><th>Sumber</th><td><?= $pt->sumber==='mandiri'?'Daftar mandiri (via form)':'Dibuat admin' ?></td></tr><tr><th>Email</th><td><?= e($pt->email) ?></td></tr><tr><th>Kelompok</th><td><?= e($pt->nama_kelompok) ?></td></tr><tr><th>WhatsApp</th><td><?= e($pt->whatsapp) ?></td></tr><tr><th>Jenis usaha</th><td><?= e($pt->jenis_usaha) ?></td></tr>
 <tr><th>Alamat</th><td><?= e($pt->alamat) ?>, <?= e($pt->desa) ?>, <?= e($pt->kecamatan) ?></td></tr><tr><th>Deskripsi</th><td><?= nl2br(e($pt->deskripsi)) ?></td></tr>
 <tr><th>Dokumen</th><td><?php if($pt->dokumen): ?><a target="_blank" href="<?= foto_url($pt->dokumen,'peternak') ?>">Lihat dokumen</a><?php else: ?>-<?php endif; ?></td></tr></table>
 <?php if($pt->foto): ?><img src="<?= foto_url($pt->foto,'peternak') ?>" height="80" class="rounded"><?php endif; ?></div></div></div>

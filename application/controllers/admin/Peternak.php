@@ -39,9 +39,16 @@ class Peternak extends Admin_Controller {
         $baru=$this->input->post('status');
         if($this->input->method()!=='post' || !in_array($baru,array('belum','menunggu','terverifikasi','ditolak','dinonaktifkan'))) redirect('admin/peternak/detail/'.$pt->id);
         $cat=$this->input->post('catatan',TRUE);
+        // Akun daftar mandiri: tetap nonaktif selama belum pernah disetujui (menunggu/ditolak). Akun buatan admin: perilaku lama.
+        $aktif=1;
+        if($baru==='dinonaktifkan') $aktif=0;
+        elseif($pt->sumber==='mandiri' && in_array($baru,array('menunggu','ditolak'))){
+            $pernah=$this->db->where(array('peternak_id'=>$pt->id,'status_baru'=>'terverifikasi'))->count_all_results('verifikasi_peternak');
+            if(!$pernah) $aktif=0;
+        }
         $this->db->where('id',$pt->id)->update('peternak',array('status_verifikasi'=>$baru,'catatan_verifikasi'=>$cat,'updated_at'=>date('Y-m-d H:i:s')));
         $this->db->insert('verifikasi_peternak',array('peternak_id'=>$pt->id,'admin_id'=>$this->data['me']['id'],'status_lama'=>$pt->status_verifikasi,'status_baru'=>$baru,'catatan'=>$cat,'created_at'=>date('Y-m-d H:i:s')));
-        if($baru==='dinonaktifkan') $this->db->where('id',$pt->user_id)->update('users',array('is_active'=>0)); else $this->db->where('id',$pt->user_id)->update('users',array('is_active'=>1));
+        $this->db->where('id',$pt->user_id)->update('users',array('is_active'=>$aktif));
         $this->Log_model->add('verifikasi_peternak','#'.$pt->id.' '.$pt->status_verifikasi.' -> '.$baru);
         $this->session->set_flashdata('success','Status peternak diperbarui.'); redirect('admin/peternak/detail/'.$pt->id);
     }
