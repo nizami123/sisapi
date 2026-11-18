@@ -21,8 +21,9 @@ Paket ini berisi kode aplikasi (application/, assets/, database/). Core framewor
 
 ## Alur
 - Peternak daftar mandiri lewat `/daftar` -> akun nonaktif, status Menunggu -> admin menyetujui di menu Verifikasi Peternak -> akun aktif dan bisa login. (Untuk database lama jalankan `database/migrasi_daftar_mandiri.sql`.)
-- Admin: atau buat akun peternak (Data Peternak > Tambah) -> peternak login, lengkapi profil, "Ajukan Verifikasi" -> admin menyetujui (label Terverifikasi).
-- Peternak: Tambah Produk (draft atau ajukan) -> admin Verifikasi Produk -> tayang di katalog.
+- **Input oleh admin Dinas = langsung disetujui.** Admin bisa menambah peternak (Data Peternak > Tambah Peternak): akun aktif dan status langsung *Terverifikasi*. Admin juga bisa menambah produk/ternak untuk peternak mana pun (Data Produk > Tambah Produk, atau tombol "Tambah produk untuk peternak ini" di detail peternak): status produk langsung *Disetujui*, tanpa antrean verifikasi. Semuanya tercatat di riwayat verifikasi dan log aktivitas.
+- **Input oleh peternak = menunggu persetujuan.** Daftar mandiri -> status *Menunggu*; produk yang ditambahkan peternak -> status *Menunggu* -> admin Verifikasi Produk -> tayang di katalog.
+- Peternak **hanya bisa menambah produk baru setelah akunnya Terverifikasi**. Peternak yang belum terverifikasi melengkapi profil lalu "Ajukan Verifikasi"; produk lama (draft/ditolak) tetap bisa diedit dan diajukan.
 - Produk tayang publik hanya jika: peternak Terverifikasi + produk Disetujui + ketersediaan Tersedia/Habis.
 - Perubahan penting pada produk yang sudah disetujui disimpan di `produk_revisi` dan menunggu persetujuan ulang; stok dan ketersediaan langsung berlaku.
 - Tombol WhatsApp memakai `/wa/{id}`: klik dicatat lalu redirect ke wa.me (nomor dinormalisasi ke 62...).

@@ -16,56 +16,37 @@ class Produk extends Peternak_Controller {
         $p=$this->db->get_where('produk',array('id'=>(int)$id,'user_id'=>$this->data['me']['id'],'deleted_at'=>NULL))->row();
         if(!$p) show_404(); return $p;
     }
-    public function tambah(){ $this->form_data(NULL); }
+    /** Hanya peternak yang sudah diverifikasi Dinas yang boleh menambah produk baru. */
+    private function wajib_terverifikasi(){
+        if($this->pt->status_verifikasi==='terverifikasi') return;
+        $this->session->set_flashdata('warning','Produk baru hanya bisa ditambahkan setelah akun Anda terverifikasi oleh admin Dinas. Lengkapi profil lalu ajukan verifikasi.');
+        redirect('peternak/profil');
+    }
+    public function tambah(){ $this->wajib_terverifikasi(); $this->form_data(NULL); }
     public function edit($id){ $this->form_data($this->milik($id)); }
     private function form_data($p){
         $this->data['p']=$p; $this->data['fotos']=$p?$this->pm->fotos($p->id):array();
         $this->data['kategori']=$this->Ref_model->kategori_aktif(); $this->data['sub']=$this->Ref_model->subkategori();
         $this->data['kec_list']=$this->Ref_model->kecamatan();
         $kid=$p?$p->kecamatan_id:$this->pt->kecamatan_id; $this->data['desa_list']=$kid?$this->Ref_model->desa($kid):array();
+        $this->data['def']=(object)array('kecamatan_id'=>$this->pt->kecamatan_id,'desa_id'=>$this->pt->desa_id,'alamat'=>$this->pt->alamat);
         $this->data['revisi']=$p?$this->db->get_where('produk_revisi',array('produk_id'=>$p->id,'status'=>'menunggu'))->row():NULL;
         $this->page('peternak/produk_form',$p?'Edit Produk':'Tambah Produk');
     }
-    private function ambil_input(){
-        $i=$this->input; $kat=(int)$i->post('kategori_id');
-        $d=array('nama'=>$i->post('nama',TRUE),'kategori_id'=>$kat,'subkategori_id'=>(int)$i->post('subkategori_id')?:NULL,
-          'harga'=>(float)preg_replace('/[^0-9.]/','',$i->post('harga')),'satuan'=>$i->post('satuan',TRUE),
-          'deskripsi'=>$i->post('deskripsi',TRUE),'spesifikasi'=>$i->post('spesifikasi',TRUE),
-          'jenis_ternak'=>$i->post('jenis_ternak',TRUE),'ras'=>$i->post('ras',TRUE),
-          'jenis_kelamin'=>in_array($i->post('jenis_kelamin'),array('jantan','betina'))?$i->post('jenis_kelamin'):NULL,
-          'umur'=>$i->post('umur',TRUE),'berat'=>$i->post('berat',TRUE),'kondisi'=>$i->post('kondisi',TRUE),
-          'kecamatan_id'=>(int)$i->post('kecamatan_id'),'desa_id'=>(int)$i->post('desa_id')?:NULL,'alamat'=>$i->post('alamat',TRUE));
-        return $d;
-    }
-    private function valid($d){
-        $this->form_validation->set_rules('nama','Nama produk','required|max_length[200]');
-        $this->form_validation->set_rules('kategori_id','Kategori','required|integer');
-        $this->form_validation->set_rules('harga','Harga','required');
-        $this->form_validation->set_rules('satuan','Satuan','required|max_length[30]');
-        $this->form_validation->set_rules('stok','Stok','required|integer|greater_than_equal_to[0]');
-        $this->form_validation->set_rules('kecamatan_id','Kecamatan','required|integer');
-        if(!$this->form_validation->run()) return strip_tags(validation_errors(' ','; '));
-        if(!$this->db->where(array('id'=>$d['kategori_id'],'is_active'=>1))->count_all_results('kategori')) return 'Kategori tidak valid.';
-        if($d['subkategori_id'] && !$this->db->where(array('id'=>$d['subkategori_id'],'kategori_id'=>$d['kategori_id']))->count_all_results('subkategori')) return 'Subkategori tidak sesuai kategori.';
-        if($d['desa_id'] && !$this->db->where(array('id'=>$d['desa_id'],'kecamatan_id'=>$d['kecamatan_id']))->count_all_results('desa')) return 'Desa tidak sesuai kecamatan.';
-        return TRUE;
-    }
     public function simpan($id=NULL){
-        $p=$id?$this->milik($id):NULL; $d=$this->ambil_input(); $now=date('Y-m-d H:i:s');
-        $err=$this->valid($d);
+        $p=$id?$this->milik($id):NULL;
+        if(!$p) $this->wajib_terverifikasi();
+        $d=$this->pm->ambil_input(); $now=date('Y-m-d H:i:s');
+        $err=$this->pm->valid($d);
         if($err!==TRUE){ $this->session->set_flashdata('danger',$err); redirect($p?'peternak/produk/edit/'.$p->id:'peternak/produk/tambah'); }
         $stok=(int)$this->input->post('stok'); $ajukan=(bool)$this->input->post('ajukan');
-        $ket=$this->input->post('status_ketersediaan'); $ket=in_array($ket,array('tersedia','habis','tidak_aktif'))?$ket:'tersedia';
+        $ket=$this->pm->ketersediaan_input();
 
-        if(!$p){ // ---- tambah
+        if(!$p){ // ---- tambah: input peternak selalu berstatus MENUNGGU persetujuan admin
             $baru=$this->upload_lib->banyak('fotos','produk',5);
-            $d+=array('user_id'=>$this->data['me']['id'],'peternak_id'=>$this->pt->id,'stok'=>$stok,'status_ketersediaan'=>$ket,
-                'status_verifikasi'=>$ajukan?'menunggu':'draft','created_at'=>$now);
-            $this->db->insert('produk',$d); $pid=$this->db->insert_id();
-            foreach($baru as $n=>$f) $this->db->insert('produk_foto',array('produk_id'=>$pid,'file'=>$f,'urutan'=>$n,'created_at'=>$now));
-            $this->pm->log_history($pid,$this->pt->id,NULL,NULL,$d['status_verifikasi'],'Produk dibuat');
+            $pid=$this->pm->buat($d,$stok,$ket,$this->data['me']['id'],$this->pt->id,'menunggu',$baru,NULL,'Produk dibuat peternak, menunggu persetujuan');
             $this->Log_model->add('produk_tambah','#'.$pid);
-            $this->session->set_flashdata('success',$ajukan?'Produk diajukan, menunggu persetujuan admin.':'Produk disimpan sebagai draft.');
+            $this->session->set_flashdata('success','Produk dikirim, menunggu persetujuan admin.');
             redirect('peternak/produk');
         }
         // ---- edit

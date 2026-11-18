@@ -1,4 +1,5 @@
-<a href="<?= site_url('peternak/produk/tambah') ?>" class="btn btn-sisapi mb-3"><i class="fa fa-plus"></i> Tambah Produk</a>
+<?php if($pt->status_verifikasi==='terverifikasi'): ?><a href="<?= site_url('peternak/produk/tambah') ?>" class="btn btn-sisapi mb-3"><i class="fa fa-plus"></i> Tambah Produk</a>
+<?php else: ?><div class="alert alert-warning">Anda baru bisa menambah produk setelah akun <b>terverifikasi</b> oleh admin Dinas. Lengkapi <a href="<?= site_url('peternak/profil') ?>">Profil Saya</a> lalu ajukan verifikasi.</div><?php endif; ?>
 <div class="card"><div class="card-body table-responsive"><table class="table table-striped dt">
 <thead><tr><th>Foto</th><th>Produk</th><th>Harga</th><th>Stok</th><th>Verifikasi</th><th>Ketersediaan</th><th>Dilihat</th><th>Klik WA</th><th></th></tr></thead><tbody>
 <?php foreach($list as $p): ?><tr>

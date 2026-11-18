@@ -3,7 +3,8 @@
 <table class="table table-sm"><tr><th>Sumber</th><td><?= $pt->sumber==='mandiri'?'Daftar mandiri (via form)':'Dibuat admin' ?></td></tr><tr><th>Email</th><td><?= e($pt->email) ?></td></tr><tr><th>Kelompok</th><td><?= e($pt->nama_kelompok) ?></td></tr><tr><th>WhatsApp</th><td><?= e($pt->whatsapp) ?></td></tr><tr><th>Jenis usaha</th><td><?= e($pt->jenis_usaha) ?></td></tr>
 <tr><th>Alamat</th><td><?= e($pt->alamat) ?>, <?= e($pt->desa) ?>, <?= e($pt->kecamatan) ?></td></tr><tr><th>Deskripsi</th><td><?= nl2br(e($pt->deskripsi)) ?></td></tr>
 <tr><th>Dokumen</th><td><?php if($pt->dokumen): ?><a target="_blank" href="<?= foto_url($pt->dokumen,'peternak') ?>">Lihat dokumen</a><?php else: ?>-<?php endif; ?></td></tr></table>
-<?php if($pt->foto): ?><img src="<?= foto_url($pt->foto,'peternak') ?>" height="80" class="rounded"><?php endif; ?></div></div></div>
+<?php if($pt->foto): ?><img src="<?= foto_url($pt->foto,'peternak') ?>" height="80" class="rounded"><?php endif; ?>
+<div class="mt-3"><a class="btn btn-outline-success btn-sm" href="<?= site_url('admin/produk/tambah?peternak='.$pt->id) ?>"><i class="fa fa-plus"></i> Tambah produk untuk peternak ini</a></div></div></div></div>
 <div class="col-lg-5"><div class="card mb-3"><div class="card-header">Keputusan verifikasi</div><div class="card-body"><?= form_open('admin/peternak/status/'.$pt->id) ?>
 <select name="status" class="form-select mb-2"><?php foreach(array('menunggu'=>'Menunggu Verifikasi','terverifikasi'=>'Terverifikasi (beri label)','ditolak'=>'Ditolak','belum'=>'Belum Diverifikasi (cabut label)','dinonaktifkan'=>'Dinonaktifkan') as $k=>$l): ?><option value="<?= $k ?>" <?= $pt->status_verifikasi==$k?'selected':'' ?>><?= $l ?></option><?php endforeach; ?></select>
 <textarea name="catatan" class="form-control mb-2" rows="2" placeholder="Catatan (opsional)"></textarea><button class="btn btn-sisapi">Simpan</button><?= form_close() ?></div></div>
